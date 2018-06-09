@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SubmitActivity"
+    android:paddingRight="5sp"
+    android:paddingLeft="5sp"
+    android:paddingTop="5sp"
+    android:paddingBottom="5sp">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="제목"
+                    android:textColor="#000000"
+                    android:textSize="15sp" />
+
+                <EditText
+                    android:id="@+id/editSubmitTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10sp"
+                    android:maxLength="20"
+                    android:maxLines="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3sp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="분류"
+                    android:textColor="#000000"
+                    android:textSize="15sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerTopicKind"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10sp"
+                    android:entries="@array/kind"></Spinner>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="100sp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3sp"
+                    android:text="내용"
+                    android:textColor="#000000"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+
+            <EditText
+                android:id="@+id/editSubmitContents"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lines="12"
+                android:maxLength="256"
+                android:textSize="15sp" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="100sp"
+                    android:layout_height="wrap_content"
+                    android:text="위치 정보"
+                    android:textColor="#000000" />
+
+                <Spinner
+                    android:id="@+id/spinnerWhere"
+                    android:layout_width="250sp"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/location"></Spinner>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="100sp"
+                    android:layout_height="wrap_content"
+                    android:text="상세 위치"
+                    android:textColor="#000000" />
+
+                <EditText
+                    android:id="@+id/editWhereDetail"
+                    android:layout_width="250sp"
+                    android:layout_height="wrap_content"
+                    android:hint="예) 3층 복도 끝 쪽 / 203호"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3sp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnPhoto"
+                    android:layout_width="100sp"
+                    android:layout_height="wrap_content"
+                    android:onClick="mOnClick"
+                    android:text="사진 추가"
+                    android:textColor="#000000"
+                    android:textSize="13sp" />
+
+                <ImageView
+                    android:id="@+id/imgAdded"
+                    android:layout_width="35sp"
+                    android:layout_height="35sp"
+                    android:layout_gravity="center"
+                    android:maxHeight="200dp"
+                    android:maxWidth="200dp"
+                    android:adjustViewBounds="true"
+                    android:onClick="mOnClick"/>
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/btnSubmitOk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:onClick="mOnClick"
+                android:text="신고 !"
+                android:textSize="30sp"
+                android:textStyle="bold|italic" />
+
+
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

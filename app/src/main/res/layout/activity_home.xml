@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="60sp"
+    android:paddingLeft="20sp"
+    android:paddingRight="20sp"
+    android:paddingBottom="30sp"
+    android:background="@drawable/school_main">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="KW 119"
+            android:textAllCaps="true"
+            android:textSize="40sp"
+            android:textStyle="bold|italic" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_centerVertical="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/btnNoticeAct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="전체 신고 처리 상황"
+            android:textStyle="bold"/>
+        <Button
+            android:id="@+id/btnMyAct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="나의 신고 처리 상황"
+            android:textStyle="bold"/>
+        <Button
+            android:id="@+id/btnSubmitAct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="신고 하기"
+            android:textColor="#c61414"
+            android:textStyle="bold"/>
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="로그 아웃"
+            android:textStyle="bold"/>
+        <Button
+            android:id="@+id/btnExit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="종료"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp">
+
+    </RelativeLayout>
+
+</RelativeLayout>
