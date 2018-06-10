@@ -512,7 +512,9 @@ public class SubmitActivity extends AppCompatActivity {
             if(mServerMsg.equals("err")){
                 Toast.makeText(getApplicationContext(), "내부 서버 오류\n다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getApplicationContext(), "신고 완료 !", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "신고 완료 !\n홈으로 이동합니다.", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                startActivity(intent);
             }
         }
     }
@@ -546,7 +548,7 @@ public class SubmitActivity extends AppCompatActivity {
         // MultipartBody.Part is used to send also the actual file name
         MultipartBody.Part body = MultipartBody.Part.createFormData("picture", photo.getName(), photoBody);
 
-        String descriptionString = "image";
+        String descriptionString = Integer.toString(mUserSessionId);
 
         RequestBody description = RequestBody.create(MediaType.parse("multipart/form-data"), descriptionString);
 
