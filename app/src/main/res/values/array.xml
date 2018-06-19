@@ -28,4 +28,37 @@
         <item>도서관 앞 광장</item>
         <item>기타</item>
     </string-array>
+
+    <string-array name="topic_kind">
+        <item>전체</item>
+        <item>기자재 신고</item>
+        <item>기자재 건의</item>
+        <item>환경 신고</item>
+        <item>불편 사항</item>
+        <item>학교 정책 건의</item>
+        <item>기타</item>
+    </string-array>
+
+    <string-array name="topic_location">
+        <item>전체</item>
+        <item>위치 선택 안함</item>
+        <item>화도관</item>
+        <item>비마관</item>
+        <item>참빛관</item>
+        <item>한울관</item>
+        <item>새빛관</item>
+        <item>문화관</item>
+        <item>연구관</item>
+        <item>복지관</item>
+        <item>옥의관</item>
+        <item>누리관</item>
+        <item>중앙 도서관</item>
+        <item>노천 극장</item>
+        <item>풋살장/농구장</item>
+        <item>화도관 앞 광장</item>
+        <item>도서관 앞 광장</item>
+        <item>기타</item>
+    </string-array>
+
+
 </resources>

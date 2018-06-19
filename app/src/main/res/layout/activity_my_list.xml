@@ -1,9 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MyListActivity">
+    tools:context=".MyListActivity"
+    android:paddingTop="5sp"
+    android:paddingBottom="5sp"
+    android:paddingRight="3sp"
+    android:paddingLeft="3sp">
 
-</android.support.constraint.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="80sp"
+                android:layout_height="wrap_content"
+                android:text="분류"
+                android:textColor="#000000"/>
+            <Spinner
+                android:id="@+id/spinMyKind"
+                android:layout_width="300sp"
+                android:layout_height="wrap_content"
+                android:entries="@array/topic_kind">
+            </Spinner>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="80sp"
+                android:layout_height="wrap_content"
+                android:text="위치"
+                android:textColor="#000000"/>
+            <Spinner
+                android:id="@+id/spinMyLocation"
+                android:layout_width="300sp"
+                android:layout_height="wrap_content"
+                android:entries="@array/topic_location">
+            </Spinner>
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/listMy"
+            android:layout_width="380sp"
+            android:layout_height="500sp"
+            android:layout_marginTop="3sp"></ListView>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

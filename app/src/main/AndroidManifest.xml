@@ -3,10 +3,10 @@
     package="com.example.task.kw119">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -28,6 +28,7 @@
         <activity android:name=".SubmitActivity" />
         <activity android:name=".MyListActivity" />
         <activity android:name=".NoticeActivity" />
+        <activity android:name=".TopicActivity"></activity>
     </application>
 
 </manifest>
