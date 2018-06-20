@@ -42,13 +42,17 @@ public class MyListActivity extends AppCompatActivity {
     private static final String TAG="KW119-MyList";
     private static final String MY_LIST_URL_ADDRESS="http://13.125.217.245:3000/mylist";
 
-    private String mServerMsg;
+    private String mResponseMsg;
     private int mUserSessionId;
 
     private Spinner mSpinKind, mSpinLocation;
 
     private String mKind, mWhere;
-    private int mTopicIndex;
+    private int mPreEndIndex;
+
+
+    // response data
+
 
     /**
      * 임시 테스트 데이터
@@ -79,7 +83,7 @@ public class MyListActivity extends AppCompatActivity {
         actionBar.setHomeButtonEnabled(true);
 
         /**
-         * 임시 테스트 코드 @@@@@@@@@@@@@@@@@@2
+         * 임시 테스트 코드 @@@@@@@@@@@@@@@@@@ START @@@@@@@@@@@@@@@@
          */
 
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, testListEntries);
@@ -90,11 +94,15 @@ public class MyListActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){ // 아이템 클릭 을 받음
             @Override
             public void onItemClick(AdapterView parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), (String)parent.getItemAtPosition(position) , Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), TopicActivity.class);
+                intent.putExtra("sid", mUserSessionId);
+                intent.putExtra("topic_num", mUserSessionId);
+                intent.putExtra("topic_title", mUserSessionId);
+                startActivity(intent);
             }
         });
         /**
-         * 임시 테스트 코드 @@@@@@@@@@@@@@@@@
+         * 임시 테스트 코드 @@@@@@@@@@@@@@@@@ END @@@@@@@@@@@@@@@@@@
          */
 
         /**
@@ -143,10 +151,10 @@ public class MyListActivity extends AppCompatActivity {
 
     // 데이터 초기화 //
     private void mInitVariables(){
-        mServerMsg = null;
+        mResponseMsg = null;
         mKind = null;
         mWhere = null;
-        mTopicIndex = 0;
+        mPreEndIndex = 0;
     }
 
     /**
@@ -178,11 +186,11 @@ public class MyListActivity extends AppCompatActivity {
     /**
      * client code (http json asyncTask)
      */
-    public class ConnServerAsyncTask extends AsyncTask<String, String, String> {
+    public class GetTopicList extends AsyncTask<String, String, String> {
 
         @Override
         protected void onPreExecute() {
-            mServerMsg=null;
+            mResponseMsg=null;
             super.onPreExecute();
         }
 
@@ -191,9 +199,9 @@ public class MyListActivity extends AppCompatActivity {
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.accumulate("sid", mUserSessionId);
-                jsonObject.accumulate("kind", mKind);
-                jsonObject.accumulate("location", mWhere);
-                jsonObject.accumulate("preIndex",mTopicIndex);
+                //jsonObject.accumulate("kind", mKind);
+                //jsonObject.accumulate("location", mWhere);
+                jsonObject.accumulate("preEndIndex", mPreEndIndex);
 
                 HttpURLConnection con = null;
                 BufferedReader reader = null;
@@ -225,9 +233,9 @@ public class MyListActivity extends AppCompatActivity {
                     while((line = reader.readLine()) != null){
                         buffer.append(line);
                     }
-                    mServerMsg = buffer.toString();
+                    mResponseMsg = buffer.toString();
                     Log.v(TAG, "receive data from server");
-                    return mServerMsg;
+                    return mResponseMsg;
                 } catch (MalformedURLException e){
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -255,10 +263,11 @@ public class MyListActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            if(mServerMsg.equals("err")){
-                Toast.makeText(getApplicationContext(), mServerMsg, Toast.LENGTH_SHORT).show();
+            if(mResponseMsg.equals("err")){
+                Toast.makeText(getApplicationContext(), mResponseMsg, Toast.LENGTH_SHORT).show();
                 finish();
             } else { // result
+                mPreEndIndex = 1;
 
             }
         }

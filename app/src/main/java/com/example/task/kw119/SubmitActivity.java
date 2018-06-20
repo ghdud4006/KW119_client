@@ -80,7 +80,7 @@ public class SubmitActivity extends AppCompatActivity {
     private static final int CROP_FROM_IMAGE = 2;
 
     // system var
-    private String mServerMsg;
+    private String mResponseMsg;
     private int mUserSessionId;
 
     // widget var
@@ -189,7 +189,7 @@ public class SubmitActivity extends AppCompatActivity {
         mWhere = null;
         mWhereDetail = null;
         mWhereTotal = null;
-        mServerMsg = null;
+        mResponseMsg = null;
         mWhereOn = false;
         mIsImgAdded = false;
     }
@@ -434,7 +434,7 @@ public class SubmitActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            mServerMsg=null;
+            mResponseMsg=null;
             super.onPreExecute();
         }
 
@@ -479,9 +479,9 @@ public class SubmitActivity extends AppCompatActivity {
                     while((line = reader.readLine()) != null){
                         buffer.append(line);
                     }
-                    mServerMsg = buffer.toString();
+                    mResponseMsg = buffer.toString();
                     Log.v(TAG, "receive data from server");
-                    return mServerMsg;
+                    return mResponseMsg;
                 } catch (MalformedURLException e){
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -509,7 +509,7 @@ public class SubmitActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            if(mServerMsg.equals("err")){
+            if(mResponseMsg.equals("err")){
                 Toast.makeText(getApplicationContext(), "내부 서버 오류\n다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getApplicationContext(), "신고 완료 !\n홈으로 이동합니다.", Toast.LENGTH_SHORT).show();

@@ -1,6 +1,9 @@
 package com.example.task.kw119;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -40,26 +43,24 @@ import java.net.URL;
  */
 public class TopicActivity extends AppCompatActivity {
 
-    private static final String TAG="KW119-MyList";
+    private static final String TAG="KW119-Topic";
     private static final String GET_TOPIC_URL_ADDRESS="http://13.125.217.245:3000/topic";
+    private static final String GET_IMAGE_URL_ADDRESS="http://13.125.217.245:3000/static/";
 
-
-    // use for server comm
-    private String mServerMsg;
+    // client code var
+    private String mResponseMsg;
     private int mUserSessionId;
     private int mTopicNum;
 
+    // topic data
+    private String mTitle, mKind, mLocation, mDate, mContents, mResult, mImgName;
+    private Bitmap mBitmap;
 
-    private String mTitle, mKind, mLocation, mDate, mContents, mResult;
 
-
-
+    // widget var
     private TextView mTvTitle, mTvKind, mTvLocation, mTvDate, mTvContents, mTvResult;
     private ImageView mIvAddedImg;
     private Button mBtnUpdate, mBtnDelete, mBtnCancel;
-
-
-
 
 
     @Override
@@ -77,18 +78,13 @@ public class TopicActivity extends AppCompatActivity {
 
         mInitComponents();
         mInitVariables();
-        // get topic information
-        GetTopicAsyncTask submitJsonAsyncTask = new GetTopicAsyncTask();
-        submitJsonAsyncTask.execute(GET_TOPIC_URL_ADDRESS);
-        ///////////////////////
-
-
 
         // 액션바 뒤로가기 버튼 추가
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
 
+        mRequestTopicData();
     }
 
     // 액션바 뒤로가기 버튼 //
@@ -113,41 +109,86 @@ public class TopicActivity extends AppCompatActivity {
     /**
      * initializer
      */
-
-
     // 위젯 초기화 //
     private void mInitComponents(){
-
+        mTvTitle = (TextView)findViewById(R.id.tvTopicTitle);
+        mTvKind = (TextView)findViewById(R.id.tvTopicKind);
+        mTvLocation = (TextView)findViewById(R.id.tvTopicLocation);
+        mTvDate = (TextView)findViewById(R.id.tvTopicDate);
+        mTvContents = (TextView)findViewById(R.id.tvTopicContents);
+        mTvResult = (TextView)findViewById(R.id.tvTopicResult);
+        mIvAddedImg = (ImageView)findViewById(R.id.ivTopicImg);
+        mBtnUpdate = (Button)findViewById(R.id.btnTopicUpdate);
+        mBtnDelete = (Button)findViewById(R.id.btnTopicDelete);
+        mBtnCancel = (Button)findViewById(R.id.btnTopicCancel);
     }
 
     // 데이터 초기화 //
     private void mInitVariables(){
-
+        mTopicNum = 1;
+        mKind = null;
+        mLocation = null;
+        mDate = null;
+        mContents = null;
+        mResult = null;
     }
 
-
-    private void mOnClick(View v){
+    /**
+     * button listener
+     */
+    public void mOnClick(View v){
         switch (v.getId()){
             case R.id.btnTopicUpdate:
-
+                mOnClickBtnUpdate();
                 break;
+            case R.id.btnTopicDelete:
+                mOnClickBtnDelete();
+                break;
+
             case R.id.btnTopicCancel:
-                finish();
+                mOnClickBtnCancel();
                 break;
 
         }
     }
+
+    private void mOnClickBtnUpdate(){
+        return;
+    }
+
+    private void mOnClickBtnDelete(){
+        return;
+    }
+
+    private void mOnClickBtnCancel(){
+        finish();
+        return;
+    }
+
 
 
 
     /**
      * client code
      */
-    public class GetTopicAsyncTask extends AsyncTask<String, String, String> {
+    private void mRequestTopicData() {
+        // request image
+        GetTopicImage getTopicImage = new GetTopicImage();
+        getTopicImage.execute(GET_IMAGE_URL_ADDRESS+Integer.toString(mUserSessionId)+"/"+mImgName);
+        // request json data
+        GetTopicData getTopicData = new GetTopicData();
+        getTopicData.execute(GET_TOPIC_URL_ADDRESS);
+    }
+
+    /**
+     * http thread
+     * request data
+     */
+    private class GetTopicData extends AsyncTask<String, String, String> {
 
         @Override
         protected void onPreExecute() {
-            mServerMsg=null;
+            mResponseMsg=null;
             super.onPreExecute();
         }
 
@@ -189,9 +230,9 @@ public class TopicActivity extends AppCompatActivity {
                     while((line = reader.readLine()) != null){
                         buffer.append(line);
                     }
-                    mServerMsg = buffer.toString();
+                    mResponseMsg = buffer.toString();
                     Log.v(TAG, "receive data from server");
-                    return mServerMsg;
+                    return mResponseMsg;
                 } catch (MalformedURLException e){
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -215,17 +256,54 @@ public class TopicActivity extends AppCompatActivity {
         }
 
 
-
+        /**
+         * http thread
+         * request image
+         */
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            if(mServerMsg.equals("err")){ // internal server error
-                Toast.makeText(getApplicationContext(), mServerMsg, Toast.LENGTH_SHORT).show();
+            if(mResponseMsg.equals("err")){ // internal server error
+                Toast.makeText(getApplicationContext(), mResponseMsg, Toast.LENGTH_SHORT).show();
                 finish();
-            } else { // get topic info
+            } else { // set topic info to view
 
             }
         }
 
+    }
+
+    private class GetTopicImage extends AsyncTask<String, String, Bitmap> {
+
+        ProgressDialog pDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(TopicActivity.this);
+            pDialog.setMessage("Loading...");
+            pDialog.show();
+        }
+
+        protected Bitmap doInBackground(String... args) {
+            try {
+                mBitmap = BitmapFactory
+                        .decodeStream((InputStream) new URL(args[0])
+                                .getContent());
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return mBitmap;
+        }
+
+        protected void onPostExecute(Bitmap image) {
+            if (image != null) {
+                mIvAddedImg.setImageBitmap(image);
+                pDialog.dismiss();
+            } else {
+                pDialog.dismiss();
+            }
+        }
     }
 }

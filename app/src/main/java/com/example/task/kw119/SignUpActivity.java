@@ -47,7 +47,7 @@ public class SignUpActivity extends AppCompatActivity {
     private RadioGroup mGroupIdentity;
 
     // system msg
-    private String mServerMsg;
+    private String mResponseMsg;
 
 
     @Override
@@ -80,7 +80,7 @@ public class SignUpActivity extends AppCompatActivity {
         mUserStuId = null;
         mUserName = null;
         mUserIsStudent = true;
-        mServerMsg = null;
+        mResponseMsg = null;
     }
 
 
@@ -182,7 +182,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            mServerMsg=null;
+            mResponseMsg=null;
             super.onPreExecute();
         }
 
@@ -227,9 +227,9 @@ public class SignUpActivity extends AppCompatActivity {
                     while((line = reader.readLine()) != null){
                         buffer.append(line);
                     }
-                    mServerMsg = buffer.toString();
+                    mResponseMsg = buffer.toString();
                     Log.v(TAG, "receive data from server");
-                    return mServerMsg;
+                    return mResponseMsg;
                 } catch (MalformedURLException e){
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -257,15 +257,15 @@ public class SignUpActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            if(mServerMsg.equals("ack")){
+            if(mResponseMsg.equals("ack")){
                 Toast.makeText(getApplicationContext(), "회원가입 완료.\n로그인 해주세요.", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
                 finish();
-            } else if (mServerMsg.equals("nack")){
+            } else if (mResponseMsg.equals("nack")){
                 Toast.makeText(getApplicationContext(), "이미 존재하는 아이디 입니다.", Toast.LENGTH_SHORT).show();
             } else { //err
-                Toast.makeText(getApplicationContext(), mServerMsg, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), mResponseMsg, Toast.LENGTH_SHORT).show();
             }
         }
 

@@ -20,7 +20,7 @@ public class NoticeActivity extends AppCompatActivity {
     private static final String TAG="KW119-Notice";
     private static final String TOTAL_LIST_URL_ADDRESS="http://13.125.217.245:3000/notice";
 
-    private String mServerMsg;
+    private String mResponseMsg;
     private int mUserSessionId;
 
     @Override

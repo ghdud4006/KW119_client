@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
     private String mUserId, mUserPwd;
 
     //system modules
-    private String mServerMsg;
+    private String mResponseMsg;
     private BackPressCloseHandler backPressCloseHandler;
 
     @Override
@@ -142,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            mServerMsg=null;
+            mResponseMsg=null;
             super.onPreExecute();
         }
 
@@ -183,9 +183,9 @@ public class LoginActivity extends AppCompatActivity {
                     while((line = reader.readLine()) != null){
                         buffer.append(line);
                     }
-                    mServerMsg = buffer.toString();
+                    mResponseMsg = buffer.toString();
                     Log.v(TAG, "receive data from server");
-                    return mServerMsg;
+                    return mResponseMsg;
                 } catch (MalformedURLException e){
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -213,15 +213,15 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            if(mServerMsg.equals("err")){
-                Toast.makeText(getApplicationContext(), mServerMsg, Toast.LENGTH_SHORT).show();
-            } else if(mServerMsg.equals("nack:id")){
+            if(mResponseMsg.equals("err")){
+                Toast.makeText(getApplicationContext(), mResponseMsg, Toast.LENGTH_SHORT).show();
+            } else if(mResponseMsg.equals("nack:id")){
                 Toast.makeText(getApplicationContext(), "존재하지 않는 아이디 입니다.", Toast.LENGTH_SHORT).show();
-            } else if(mServerMsg.equals("nack:pwd")) {
+            } else if(mResponseMsg.equals("nack:pwd")) {
                 Toast.makeText(getApplicationContext(), "아이디 비밀번호를 확인해주세요.", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getApplicationContext(), "로그인 되었습니다.", Toast.LENGTH_SHORT).show();
-                SaveSharedPreference.setUserName(LoginActivity.this, mServerMsg); //로그인 인증
+                SaveSharedPreference.setUserName(LoginActivity.this, mResponseMsg); //로그인 인증
                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                 startActivity(intent);
             }
