@@ -8,7 +8,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +28,16 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+
+/**
+ * Topic Activity (MyTopic)
+ * ==============================
+ * show selected topic
+ * user gets topic information from server
+ * user can Revise or Delete topic
+ * ==============================
+ * made by Lee Ho Young (ghdud4006@gmail.com)
+ */
 public class TopicActivity extends AppCompatActivity {
 
     private static final String TAG="KW119-MyList";
@@ -37,12 +50,13 @@ public class TopicActivity extends AppCompatActivity {
     private int mTopicNum;
 
 
-    private String mTitle, mKind, mLocation, mContents;
+    private String mTitle, mKind, mLocation, mDate, mContents, mResult;
 
 
 
-    private TextView mTvTitle, mTvKind, mTvLocation, mTvContents;
-    private ImageView mIvImg;
+    private TextView mTvTitle, mTvKind, mTvLocation, mTvDate, mTvContents, mTvResult;
+    private ImageView mIvAddedImg;
+    private Button mBtnUpdate, mBtnDelete, mBtnCancel;
 
 
 
@@ -61,6 +75,12 @@ public class TopicActivity extends AppCompatActivity {
 
         setTitle(mTitle);
 
+        mInitComponents();
+        mInitVariables();
+        // get topic information
+        GetTopicAsyncTask submitJsonAsyncTask = new GetTopicAsyncTask();
+        submitJsonAsyncTask.execute(GET_TOPIC_URL_ADDRESS);
+        ///////////////////////
 
 
 
@@ -90,6 +110,21 @@ public class TopicActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * initializer
+     */
+
+
+    // 위젯 초기화 //
+    private void mInitComponents(){
+
+    }
+
+    // 데이터 초기화 //
+    private void mInitVariables(){
+
+    }
+
 
     private void mOnClick(View v){
         switch (v.getId()){
@@ -103,7 +138,12 @@ public class TopicActivity extends AppCompatActivity {
         }
     }
 
-    public class ConnServerAsyncTask extends AsyncTask<String, String, String> {
+
+
+    /**
+     * client code
+     */
+    public class GetTopicAsyncTask extends AsyncTask<String, String, String> {
 
         @Override
         protected void onPreExecute() {
@@ -179,10 +219,10 @@ public class TopicActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            if(mServerMsg.equals("err")){
+            if(mServerMsg.equals("err")){ // internal server error
                 Toast.makeText(getApplicationContext(), mServerMsg, Toast.LENGTH_SHORT).show();
                 finish();
-            } else { // result
+            } else { // get topic info
 
             }
         }

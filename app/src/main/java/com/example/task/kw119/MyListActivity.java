@@ -32,7 +32,7 @@ import java.net.URL;
 /**
  * MyList Activity
  * ==============================
- *
+ * show each user's topic list
  *
  * ==============================
  * made by Lee Ho Young (ghdud4006@gmail.com)

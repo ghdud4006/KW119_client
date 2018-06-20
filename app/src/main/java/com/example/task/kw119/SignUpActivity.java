@@ -27,7 +27,7 @@ import java.net.URL;
 /**
  * SignUp Activity
  * ==============================
- *
+ * sign up function
  *
  * ==============================
  * made by Lee Ho Young (ghdud4006@gmail.com)

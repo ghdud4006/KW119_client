@@ -30,7 +30,7 @@ import java.net.URL;
 /**
  * Login Activity
  * ==============================
- *
+ * login
  *
  * ==============================
  * made by Lee Ho Young (ghdud4006@gmail.com)

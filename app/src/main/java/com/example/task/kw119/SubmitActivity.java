@@ -541,7 +541,7 @@ public class SubmitActivity extends AppCompatActivity {
                 .build();
 
         NetworkService service = retrofit.create(NetworkService.class);
-        Log.v(TAG, "upload ... > img uri : "+ImgURL);
+        Log.v(TAG, "upload / img uri : "+ImgURL);
         File photo = new File(ImgURL);
         RequestBody photoBody = RequestBody.create(MediaType.parse("image/jpg"), photo);
 

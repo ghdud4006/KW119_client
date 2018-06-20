@@ -30,7 +30,7 @@ import java.net.URL;
 /**
  * Home Activity
  * ==============================
- *
+ * show function menu
  *
  * ==============================
  * made by Lee Ho Young (ghdud4006@gmail.com)

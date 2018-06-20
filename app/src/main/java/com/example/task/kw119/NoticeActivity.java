@@ -10,7 +10,7 @@ import android.view.MenuItem;
 /**
  * Notice Activity
  * ==============================
- *
+ * show whole topic list
  *
  * ==============================
  * made by Lee Ho Young (ghdud4006@gmail.com)

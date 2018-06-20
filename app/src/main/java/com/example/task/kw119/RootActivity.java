@@ -13,8 +13,9 @@ import com.example.task.kw119.Modules.SaveSharedPreference;
 /**
  * Root Activity
  * ==============================
- *
- *
+ * start app
+ * show main logo
+ * redirect to the other activity by login state
  * ==============================
  * made by Lee Ho Young (ghdud4006@gmail.com)
  */
