@@ -18,6 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -267,6 +268,20 @@ public class TopicActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), mResponseMsg, Toast.LENGTH_SHORT).show();
                 finish();
             } else { // set topic info to view
+                // parsing String to json
+                JSONObject jsonObject = null;
+                try {
+                    jsonObject = new JSONObject(mResponseMsg);
+                    mTvTitle.setText(jsonObject.get("title").toString());
+                    mTvKind.setText(jsonObject.get("kind").toString());
+                    mTvLocation.setText(jsonObject.get("location").toString());
+                    mTvDate.setText(jsonObject.get("date").toString());
+                    mTvContents.setText(jsonObject.get("contents").toString());
+                    mTvResult.setText(jsonObject.get("result").toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
 
             }
         }

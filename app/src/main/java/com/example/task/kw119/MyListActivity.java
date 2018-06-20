@@ -43,7 +43,8 @@ public class MyListActivity extends AppCompatActivity {
     private static final String MY_LIST_URL_ADDRESS="http://13.125.217.245:3000/mylist";
 
     private String mResponseMsg;
-    private int mUserSessionId;
+    private int mUserSessionId, mTopicNum;
+    private String mTopicTitle;
 
     private Spinner mSpinKind, mSpinLocation;
 
@@ -96,8 +97,8 @@ public class MyListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), TopicActivity.class);
                 intent.putExtra("sid", mUserSessionId);
-                intent.putExtra("topic_num", mUserSessionId);
-                intent.putExtra("topic_title", mUserSessionId);
+                intent.putExtra("topic_num", mTopicNum);
+                intent.putExtra("topic_title", mTopicTitle);
                 startActivity(intent);
             }
         });
@@ -154,7 +155,10 @@ public class MyListActivity extends AppCompatActivity {
         mResponseMsg = null;
         mKind = null;
         mWhere = null;
+        mTopicTitle = null;
         mPreEndIndex = 0;
+        mTopicNum = 0;
+
     }
 
     /**
