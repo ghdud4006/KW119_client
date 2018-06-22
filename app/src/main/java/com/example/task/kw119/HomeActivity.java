@@ -35,6 +35,7 @@ import java.net.URL;
  * ==============================
  * made by Lee Ho Young (ghdud4006@gmail.com)
  */
+
 public class HomeActivity extends AppCompatActivity {
 
     private static final String TAG="KW119-Home";
