@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_marginStart="10sp"
+        android:layout_marginTop="20sp"
+        android:layout_width="50sp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tvItemKind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="kind"
+            android:textColor="#000000"
+            android:textSize="10sp"/>
+        <TextView
+            android:id="@+id/tvItemLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="location"
+            android:textColor="#000000"
+            android:textSize="10sp"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_marginStart="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tvItemTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="title title title title"
+            android:textStyle="bold"
+            android:textColor="#000000"/>
+        <TextView
+            android:layout_marginStart="130sp"
+            android:id="@+id/tvItemAuthor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="author"
+            android:textColor="#000000"
+            android:textSize="13sp"/>
+        <TextView
+            android:layout_marginStart="130sp"
+            android:id="@+id/tvItemDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0000-00-00"
+            android:textSize="13sp"/>
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

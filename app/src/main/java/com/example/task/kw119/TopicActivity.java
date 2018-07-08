@@ -54,7 +54,7 @@ public class TopicActivity extends AppCompatActivity {
     private int mTopicNum;
 
     // topic data
-    private String mTitle, mKind, mLocation, mDate, mContents, mResult, mImgName;
+    private String mTitle, mKind, mLocation, mDate, mContents, mResult, mImgPath;
     private Bitmap mBitmap;
 
 
@@ -73,7 +73,7 @@ public class TopicActivity extends AppCompatActivity {
         Intent intent = getIntent();
         mUserSessionId = intent.getExtras().getInt("sid");
         mTopicNum = intent.getExtras().getInt("topic_num");
-        mTitle = intent.getStringExtra("topic_title");
+        mImgPath = intent.getStringExtra("img_path");
 
         setTitle(mTitle);
 
@@ -132,6 +132,7 @@ public class TopicActivity extends AppCompatActivity {
         mDate = null;
         mContents = null;
         mResult = null;
+        mImgPath = null;
     }
 
     /**
@@ -171,19 +172,19 @@ public class TopicActivity extends AppCompatActivity {
 
     /**
      * client code
+     * http
      */
     private void mRequestTopicData() {
         // request image
         GetTopicImage getTopicImage = new GetTopicImage();
-        getTopicImage.execute(GET_IMAGE_URL_ADDRESS+Integer.toString(mUserSessionId)+"/"+mImgName);
+        getTopicImage.execute(GET_IMAGE_URL_ADDRESS+Integer.toString(mUserSessionId)+"/"+mImgPath);
         // request json data
         GetTopicData getTopicData = new GetTopicData();
         getTopicData.execute(GET_TOPIC_URL_ADDRESS);
     }
 
     /**
-     * http thread
-     * request data
+     * request data thread
      */
     private class GetTopicData extends AsyncTask<String, String, String> {
 
@@ -197,7 +198,6 @@ public class TopicActivity extends AppCompatActivity {
         protected String doInBackground(String... urls) {
             try {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.accumulate("sid", mUserSessionId);
                 jsonObject.accumulate("topicNumber", mTopicNum);
 
 
@@ -256,11 +256,6 @@ public class TopicActivity extends AppCompatActivity {
             return null;
         }
 
-
-        /**
-         * http thread
-         * request image
-         */
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
@@ -281,13 +276,16 @@ public class TopicActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-
             }
         }
 
     }
 
+
+
+    /**
+     * request image thread
+     */
     private class GetTopicImage extends AsyncTask<String, String, Bitmap> {
 
         ProgressDialog pDialog;
