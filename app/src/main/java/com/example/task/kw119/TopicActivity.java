@@ -18,6 +18,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -46,6 +50,7 @@ public class TopicActivity extends AppCompatActivity {
 
     private static final String TAG="KW119-Topic";
     private static final String GET_TOPIC_URL_ADDRESS="http://13.125.217.245:3000/topic";
+    private static final String DELETE_TOPIC_URL_ADDRESS="http://13.125.217.245:3000/delete";
     private static final String GET_IMAGE_URL_ADDRESS="http://13.125.217.245:3000/static/";
 
     // client code var
@@ -102,8 +107,6 @@ public class TopicActivity extends AppCompatActivity {
     // 디바이스 뒤로가기 버튼 //
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-        startActivity(intent);
         finish();
     }
 
@@ -121,18 +124,15 @@ public class TopicActivity extends AppCompatActivity {
         mIvAddedImg = (ImageView)findViewById(R.id.ivTopicImg);
         mBtnUpdate = (Button)findViewById(R.id.btnTopicUpdate);
         mBtnDelete = (Button)findViewById(R.id.btnTopicDelete);
-        mBtnCancel = (Button)findViewById(R.id.btnTopicCancel);
     }
 
     // 데이터 초기화 //
     private void mInitVariables(){
-        mTopicNum = 1;
         mKind = null;
         mLocation = null;
         mDate = null;
         mContents = null;
         mResult = null;
-        mImgPath = null;
     }
 
     /**
@@ -146,11 +146,6 @@ public class TopicActivity extends AppCompatActivity {
             case R.id.btnTopicDelete:
                 mOnClickBtnDelete();
                 break;
-
-            case R.id.btnTopicCancel:
-                mOnClickBtnCancel();
-                break;
-
         }
     }
 
@@ -159,12 +154,8 @@ public class TopicActivity extends AppCompatActivity {
     }
 
     private void mOnClickBtnDelete(){
-        return;
-    }
-
-    private void mOnClickBtnCancel(){
-        finish();
-        return;
+        DeleteTopicData deleteTopicData = new DeleteTopicData();
+        deleteTopicData.execute(DELETE_TOPIC_URL_ADDRESS);
     }
 
 
@@ -263,16 +254,31 @@ public class TopicActivity extends AppCompatActivity {
                 finish();
             } else { // set topic info to view
                 // parsing String to json
-                JSONObject jsonObject = null;
+                Log.v(TAG,"SERVER RESPONSE MSG : "+mResponseMsg);
+                JsonParser jsonParser = new JsonParser();
+                Object object = jsonParser.parse(mResponseMsg);
                 try {
-                    jsonObject = new JSONObject(mResponseMsg);
-                    mTvTitle.setText(jsonObject.get("title").toString());
-                    mTvKind.setText(jsonObject.get("kind").toString());
-                    mTvLocation.setText(jsonObject.get("location").toString());
-                    mTvDate.setText(jsonObject.get("date").toString());
-                    mTvContents.setText(jsonObject.get("contents").toString());
-                    mTvResult.setText(jsonObject.get("result").toString());
-                } catch (JSONException e) {
+                    JsonObject jsonObject = (JsonObject)object;
+
+                    String title = jsonObject.get("title").toString();
+                    String date = jsonObject.get("date").toString();
+                    String kind= jsonObject.get("kind").toString();
+                    String location= jsonObject.get("location").toString();
+                    String content= jsonObject.get("contents").toString();
+
+                    title = title.substring(1,title.length()-1);
+                    date = date.substring(1,11);
+                    kind = kind.substring(1,kind.length()-1);
+                    location = location.substring(1,location.length()-1);
+                    content = content.substring(1,content.length()-1);
+
+                    mTvTitle.setText(title);
+                    mTvKind.setText(kind);
+                    mTvLocation.setText(location);
+                    mTvDate.setText(date);
+                    mTvContents.setText(content);
+                    //mTvResult.setText("");
+                } catch (JsonIOException e) {
                     e.printStackTrace();
                 }
             }
@@ -317,5 +323,89 @@ public class TopicActivity extends AppCompatActivity {
                 pDialog.dismiss();
             }
         }
+    }
+
+
+    private class DeleteTopicData extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            mResponseMsg=null;
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.accumulate("topic_num", mTopicNum);
+
+                HttpURLConnection con = null;
+                BufferedReader reader = null;
+
+                try{
+                    URL url = new URL(urls[0]);
+                    con = (HttpURLConnection) url.openConnection();
+                    con.setRequestMethod("POST");
+                    con.setRequestProperty("Cache-Control", "no-cache");
+                    con.setRequestProperty("Content-Type", "application/json");
+                    con.setRequestProperty("Accept", "text/html");
+                    con.setDoOutput(true);
+                    con.setDoInput(true);
+                    con.connect();
+
+                    OutputStream outStream = con.getOutputStream();
+                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outStream));
+                    writer.write(jsonObject.toString());
+                    writer.flush();
+                    writer.close();
+
+                    InputStream stream = con.getInputStream();
+
+                    reader = new BufferedReader(new InputStreamReader(stream));
+
+                    StringBuffer buffer = new StringBuffer();
+
+                    String line = "";
+                    while((line = reader.readLine()) != null){
+                        buffer.append(line);
+                    }
+                    mResponseMsg = buffer.toString();
+                    Log.v(TAG, "receive data from server");
+                    return mResponseMsg;
+                } catch (MalformedURLException e){
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    if(con != null){
+                        con.disconnect();
+                    }
+                    try {
+                        if(reader != null){
+                            reader.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            if(mResponseMsg.equals("err")){ // internal server error
+                Toast.makeText(getApplicationContext(), mResponseMsg, Toast.LENGTH_LONG).show();
+                finish();
+            } else { // set topic info to view
+                Toast.makeText(getApplicationContext(), "삭제 완료.", Toast.LENGTH_LONG).show();
+                finish();
+            }
+        }
+
     }
 }

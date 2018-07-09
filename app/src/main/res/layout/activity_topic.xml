@@ -42,7 +42,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10sp"
                     android:maxLength="20"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    android:textColor="#000000"/>
             </LinearLayout>
 
             <LinearLayout
@@ -66,7 +67,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10sp"
                     android:maxLength="20"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    android:textColor="#000000"/>
             </LinearLayout>
 
             <LinearLayout
@@ -90,7 +92,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10sp"
                     android:maxLength="20"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    android:textColor="#000000"/>
             </LinearLayout>
 
 
@@ -115,7 +118,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10sp"
                     android:maxLength="20"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    android:textColor="#000000"/>
             </LinearLayout>
 
             <LinearLayout
@@ -155,7 +159,8 @@
                     android:layout_height="wrap_content"
                     android:lines="12"
                     android:maxLength="256"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    android:textColor="#000000"/>
 
                 <ImageView
                     android:id="@+id/ivTopicImg"
@@ -217,14 +222,6 @@
                     android:layout_weight="1"
                     android:onClick="mOnClick"
                     android:text="삭제" />
-
-                <Button
-                    android:id="@+id/btnTopicCancel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="mOnClick"
-                    android:text="취소" />
             </LinearLayout>
 
 

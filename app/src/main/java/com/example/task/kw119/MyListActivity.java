@@ -63,7 +63,6 @@ public class MyListActivity extends AppCompatActivity {
 
     private String mKind, mWhere;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,8 +89,6 @@ public class MyListActivity extends AppCompatActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(MyListActivity.this , itemArrayList.get(position).getTitle(), Toast.LENGTH_LONG).show();
-
                 Intent intent = new Intent(getApplicationContext(), TopicActivity.class);
                 intent.putExtra("sid", mUserSessionId);
                 intent.putExtra("topic_num", itemArrayList.get(position).getTopicId());
@@ -135,6 +132,15 @@ public class MyListActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // require data to server
+        GetTopicList getTopicList = new GetTopicList();
+        getTopicList.execute(MY_LIST_URL_ADDRESS);
+    }
+
     /**
      * initializer
      */
