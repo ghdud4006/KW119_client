@@ -201,28 +201,7 @@
                 android:text="아직 처리 되지 않았습니다."/>
 
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/btnTopicUpdate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="mOnClick"
-                    android:text="수정" />
-
-                <Button
-                    android:id="@+id/btnTopicDelete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="mOnClick"
-                    android:text="삭제" />
-            </LinearLayout>
 
 
         </LinearLayout>

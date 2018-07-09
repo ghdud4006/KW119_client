@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -49,9 +50,10 @@ import java.net.URL;
 public class TopicActivity extends AppCompatActivity {
 
     private static final String TAG="KW119-Topic";
+
     private static final String GET_TOPIC_URL_ADDRESS="http://13.125.217.245:3000/topic";
-    private static final String DELETE_TOPIC_URL_ADDRESS="http://13.125.217.245:3000/delete";
     private static final String GET_IMAGE_URL_ADDRESS="http://13.125.217.245:3000/static/";
+    private static final String DELETE_TOPIC_URL_ADDRESS="http://13.125.217.245:3000/delete";
 
     // client code var
     private String mResponseMsg;
@@ -80,7 +82,7 @@ public class TopicActivity extends AppCompatActivity {
         mTopicNum = intent.getExtras().getInt("topic_num");
         mImgPath = intent.getStringExtra("img_path");
 
-        setTitle(mTitle);
+        setTitle(Integer.toString(mTopicNum));
 
         mInitComponents();
         mInitVariables();
@@ -89,19 +91,12 @@ public class TopicActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
-
-        mRequestTopicData();
     }
 
-    // 액션바 뒤로가기 버튼 //
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+    protected void onResume() {
+        super.onResume();
+        mRequestTopicData();
     }
 
     // 디바이스 뒤로가기 버튼 //
@@ -109,6 +104,32 @@ public class TopicActivity extends AppCompatActivity {
     public void onBackPressed() {
         finish();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(Menu.NONE, 1, Menu.NONE, "수정");
+        menu.add(Menu.NONE, 2, Menu.NONE, "삭제");
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: // 액션바 뒤로가기 버튼
+                finish();
+                return true;
+            case 1: //메뉴 1 '수정'
+                mOnClickBtnUpdate();
+                break;
+            case 2: //메뉴 2 '삭제'
+                mOnClickBtnDelete();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
 
     /**
      * initializer
@@ -122,8 +143,6 @@ public class TopicActivity extends AppCompatActivity {
         mTvContents = (TextView)findViewById(R.id.tvTopicContents);
         mTvResult = (TextView)findViewById(R.id.tvTopicResult);
         mIvAddedImg = (ImageView)findViewById(R.id.ivTopicImg);
-        mBtnUpdate = (Button)findViewById(R.id.btnTopicUpdate);
-        mBtnDelete = (Button)findViewById(R.id.btnTopicDelete);
     }
 
     // 데이터 초기화 //
@@ -135,22 +154,19 @@ public class TopicActivity extends AppCompatActivity {
         mResult = null;
     }
 
+
+
     /**
      * button listener
      */
-    public void mOnClick(View v){
-        switch (v.getId()){
-            case R.id.btnTopicUpdate:
-                mOnClickBtnUpdate();
-                break;
-            case R.id.btnTopicDelete:
-                mOnClickBtnDelete();
-                break;
-        }
-    }
 
     private void mOnClickBtnUpdate(){
-        return;
+        Intent intent = new Intent(getApplicationContext(), TopicUpdateActivity.class);
+        intent.putExtra("topic_num", mTopicNum);
+        intent.putExtra("title", mTitle);
+        intent.putExtra("content", mContents);
+        startActivity(intent);
+        finish();
     }
 
     private void mOnClickBtnDelete(){
@@ -259,24 +275,23 @@ public class TopicActivity extends AppCompatActivity {
                 Object object = jsonParser.parse(mResponseMsg);
                 try {
                     JsonObject jsonObject = (JsonObject)object;
+                    mTitle = jsonObject.get("title").toString();
+                    mDate = jsonObject.get("date").toString();
+                    mKind = jsonObject.get("kind").toString();
+                    mLocation = jsonObject.get("location").toString();
+                    mContents = jsonObject.get("contents").toString();
 
-                    String title = jsonObject.get("title").toString();
-                    String date = jsonObject.get("date").toString();
-                    String kind= jsonObject.get("kind").toString();
-                    String location= jsonObject.get("location").toString();
-                    String content= jsonObject.get("contents").toString();
+                    mTitle = mTitle.substring(1,mTitle.length()-1);
+                    mDate = mDate.substring(1,11);
+                    mKind = mKind.substring(1,mKind.length()-1);
+                    mLocation = mLocation.substring(1,mLocation.length()-1);
+                    mContents = mContents.substring(1,mContents.length()-1);
 
-                    title = title.substring(1,title.length()-1);
-                    date = date.substring(1,11);
-                    kind = kind.substring(1,kind.length()-1);
-                    location = location.substring(1,location.length()-1);
-                    content = content.substring(1,content.length()-1);
-
-                    mTvTitle.setText(title);
-                    mTvKind.setText(kind);
-                    mTvLocation.setText(location);
-                    mTvDate.setText(date);
-                    mTvContents.setText(content);
+                    mTvTitle.setText(mTitle);
+                    mTvKind.setText(mKind);
+                    mTvLocation.setText(mLocation);
+                    mTvDate.setText(mDate);
+                    mTvContents.setText(mContents);
                     //mTvResult.setText("");
                 } catch (JsonIOException e) {
                     e.printStackTrace();

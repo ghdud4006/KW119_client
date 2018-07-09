@@ -81,9 +81,6 @@ public class NoticeActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
 
-        GetTopicList getTopicList = new GetTopicList();
-        getTopicList.execute(NOTICE_URL_ADDRESS);
-
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -184,6 +181,7 @@ public class NoticeActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             mResponseMsg=null;
+            itemArrayList.clear();
             super.onPreExecute();
         }
 

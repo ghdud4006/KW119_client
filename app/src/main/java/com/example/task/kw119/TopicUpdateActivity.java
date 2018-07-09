@@ -1,6 +1,8 @@
 package com.example.task.kw119;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -8,20 +10,25 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import org.json.JSONArray;
+import com.example.task.kw119.Modules.NetworkService;
+import com.example.task.kw119.model.UploadResult;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -30,69 +37,54 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 
-import com.example.task.kw119.Modules.ListViewAdaptor.MyListViewAdaptor;
-import com.example.task.kw119.Modules.ListViewAdaptor.ListView_item;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
+public class TopicUpdateActivity extends AppCompatActivity {
 
-/**
- * MyList Activity
- * ==============================
- * show each user's topic list
- * ==============================
- * made by Lee Ho Young (ghdud4006@gmail.com)
- */
-public class MyListActivity extends AppCompatActivity {
+    private static final String TAG="KW119-TopicUpdate";
 
-    private static final String TAG="KW119-MyList";
-    private static final String MY_LIST_URL_ADDRESS="http://13.125.217.245:3000/mylist";
+    private static final String UPDATE_TOPIC_URL_ADDRESS="http://13.125.217.245:3000/update";
 
-    private String mResponseMsg;
-    private int mUserSessionId, mTopicNum;
+    // widget var
+    private EditText mEditTitle, mEditContents, mEditWhereDetail;
+    private Spinner mSpinKind, mSpinWhere;
 
-    //widget
-    private Spinner mSpinKind, mSpinLocation;
-    private ListView mListView;
-
-    //list item, adaptor
-    MyListViewAdaptor myListViewAdaptor;
-    ArrayList<ListView_item> itemArrayList;
-
-    private String mKind, mWhere;
+    // data var
+    private String mTitle, mKind, mContents, mWhere, mWhereDetail, mWhereTotal;
+    private boolean mWhereOn;
+    private int mTopicNum;
+    private int mKindId, mWhereId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_list);
+        setContentView(R.layout.activity_topic_update);
 
-        Log.v(TAG, "MyListActivity onCreate");
-        setTitle("나의 신고 처리 상황");
-        // set action bar button
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
-        // get intent
-        Intent intent = getIntent();
-        mUserSessionId = intent.getExtras().getInt("sid");
+        Log.v(TAG, "TopicUpdateActivity onCreate");
 
-        // initialize var
         mInitComponents();
         mInitVariables();
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getApplicationContext(), TopicActivity.class);
-                intent.putExtra("sid", mUserSessionId);
-                intent.putExtra("topic_num", itemArrayList.get(position).getTopicId());
-                intent.putExtra("img_path", itemArrayList.get(position).getImgPath());
-                startActivity(intent);
-            }
-        });
+        setTitle("신고 수정");
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+
+        Intent intent = getIntent();
+        mTopicNum = intent.getExtras().getInt("topic_num");
+        mTitle = intent.getStringExtra("title");
+        mContents = intent.getStringExtra("content");
+
+        mEditTitle.setText(mTitle);
+        mEditContents.setText(mContents);
 
         /**
          * spinner listener
@@ -109,59 +101,67 @@ public class MyListActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 mKind = null;
-                mKind = parent.getItemAtPosition(0).toString();
+                mKind = parent.getItemAtPosition(mKindId).toString();
             }
         });
 
         // 위치 정보 스피너 리스너 //
-        mSpinLocation.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mSpinWhere.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 mWhere = null;
                 mWhere = parent.getItemAtPosition(position).toString();
+                if (mWhere.equals(parent.getItemAtPosition(mWhereId).toString())){
+                    mWhereOn = false;
+                } else {
+                    mWhereOn = true;
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 mWhere = null;
                 mWhere = parent.getItemAtPosition(0).toString();
+                mWhereOn = false;
             }
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // require data to server
-        //myListViewAdaptor.notifyDataSetChanged();
-        GetTopicList getTopicList = new GetTopicList();
-        getTopicList.execute(MY_LIST_URL_ADDRESS);
-    }
-
-    /**
-     * initializer
-     */
     // 위젯 초기화 //
     private void mInitComponents(){
-        mSpinKind = (Spinner)findViewById(R.id.spinMyKind);
-        mSpinLocation = (Spinner)findViewById(R.id.spinMyLocation);
-        mListView = (ListView)findViewById(R.id.listMy);
-
-        itemArrayList = new ArrayList<ListView_item>();
+        mEditTitle = (EditText)findViewById(R.id.editUpdateTitle);
+        mEditContents = (EditText)findViewById(R.id.editUpdateContents);
+        mEditWhereDetail = (EditText)findViewById(R.id.editUpdateDetail);
+        mSpinKind = (Spinner)findViewById(R.id.spinUpdateKind);
+        mSpinWhere = (Spinner)findViewById(R.id.spinUpdateWhere);
     }
 
     // 데이터 초기화 //
     private void mInitVariables(){
-        mResponseMsg = null;
+        mTitle = null;
         mKind = null;
+        mContents = null;
         mWhere = null;
-        mTopicNum = 0;
+        mWhereDetail = null;
+        mWhereTotal = null;
+        mWhereOn = false;
     }
 
-    /**
-     * button listener
-     */
+
+
+    public void mOnClick(View v){
+        switch (v.getId()){
+            case R.id.btnUpdateOk:
+                mOnBtnUpdate();
+                break;
+            case R.id.btnUpdateCancel:
+                finish();
+                break;
+
+        }
+    }
+
     // 액션바 뒤로가기 버튼 //
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -182,21 +182,52 @@ public class MyListActivity extends AppCompatActivity {
     }
 
 
-    /**
-     *  HTTP Thread
-     *  res : sid
-     *  req : json array (user's history data)
-     *  1. json object를 담고 있는 json array를 요청
-     *  2. json array -> json object 로 parsing
-     *  3. json object를 itemArrayList 에 추가, 리스트뷰에 이를 추가
-     *
-     */
-    public class GetTopicList extends AsyncTask<String, String, String> {
+    // 제출 버튼 //
+    private void mOnBtnUpdate(){
+        //데이터 초기화
+        mTitle=null;
+        mContents=null;
+        mWhereDetail=null;
+        mWhereTotal=null;
+
+        //데이터 파싱
+        mTitle = mEditTitle.getText().toString();
+        mContents = mEditContents.getText().toString();
+        mWhereDetail = mEditWhereDetail.getText().toString();
+
+        if(mWhereOn==true){
+            mWhereTotal = mWhere+'/'+ mWhereDetail;
+        } else {
+            mWhereTotal = mWhere;
+        }
+
+        //not null 예외 처리
+        if(mTitle==null || mTitle.equals("")){
+            Toast.makeText(getApplicationContext(), "제목을 입력해 주세요.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(mKind==null || mKind.equals("")){
+            Toast.makeText(getApplicationContext(), "종류를 선택해 주세요.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(mContents==null || mContents.equals("")){
+            Toast.makeText(getApplicationContext(), "내용을 입력해 주세요.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        ReqUpdateTopic reqUpdateTopic = new ReqUpdateTopic();
+        reqUpdateTopic.execute(UPDATE_TOPIC_URL_ADDRESS);
+    }
+
+
+
+    private class ReqUpdateTopic extends AsyncTask<String, String, String> {
+
+        String responseMsg;
 
         @Override
         protected void onPreExecute() {
-            itemArrayList.clear();
-            mResponseMsg=null;
+            responseMsg=null;
             super.onPreExecute();
         }
 
@@ -204,7 +235,11 @@ public class MyListActivity extends AppCompatActivity {
         protected String doInBackground(String... urls) {
             try {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.accumulate("sid", mUserSessionId);
+                jsonObject.accumulate("topic_num",mTopicNum);
+                jsonObject.accumulate("title", mTitle);
+                jsonObject.accumulate("kind", mKind);
+                jsonObject.accumulate("content", mContents);
+                jsonObject.accumulate("where", mWhereTotal);
 
                 HttpURLConnection con = null;
                 BufferedReader reader = null;
@@ -236,9 +271,9 @@ public class MyListActivity extends AppCompatActivity {
                     while((line = reader.readLine()) != null){
                         buffer.append(line);
                     }
-                    mResponseMsg = buffer.toString();
+                    responseMsg = buffer.toString();
                     Log.v(TAG, "receive data from server");
-                    return mResponseMsg;
+                    return responseMsg;
                 } catch (MalformedURLException e){
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -261,46 +296,19 @@ public class MyListActivity extends AppCompatActivity {
             return null;
         }
 
-
-
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            if(mResponseMsg.equals("err")){
-                Toast.makeText(getApplicationContext(), mResponseMsg, Toast.LENGTH_SHORT).show();
+            Log.v(TAG,"SERVER RESPONSE MSG : "+responseMsg);
+            if(responseMsg.equals("err")){ // internal server error
+                Toast.makeText(getApplicationContext(), "수정 실패", Toast.LENGTH_SHORT).show();
                 finish();
-            } else { // result
-                Log.v(TAG, "server responses:"+mResponseMsg);
-
-                JsonParser jsonParser = new JsonParser();
-                Object resObject = jsonParser.parse(mResponseMsg);
-                JsonArray jsonArray = (JsonArray)resObject;
-
-                for(int i=0; i<jsonArray.size(); i++){
-                    JsonObject jsonObj = (JsonObject)jsonArray.get(i);
-                    String title = jsonObj.get("title").toString();
-                    String author = jsonObj.get("author").toString();
-                    String date = jsonObj.get("date").toString();
-                    String kind= jsonObj.get("kind").toString();
-                    String location= jsonObj.get("location").toString();
-                    String image_path= jsonObj.get("image_path").toString();
-
-                    title = title.substring(1,title.length()-1);
-                    author = author.substring(1,author.length()-1);
-                    date = date.substring(1,11);
-                    kind = kind.substring(1,kind.length()-1);
-                    location = location.substring(1,location.length()-1);
-                    image_path = image_path.substring(1,image_path.length()-1);
-
-                    itemArrayList.add(new ListView_item(
-                            Integer.parseInt(jsonObj.get("topic_num").toString()),
-                            title, author, date, kind, location, image_path));
-
-                }
-                myListViewAdaptor = new MyListViewAdaptor(MyListActivity.this, itemArrayList);
-                mListView.setAdapter(myListViewAdaptor);
+            } else {
+                Toast.makeText(getApplicationContext(), "수정 완료", Toast.LENGTH_SHORT).show();
+                finish();
             }
         }
 
     }
+
 }
