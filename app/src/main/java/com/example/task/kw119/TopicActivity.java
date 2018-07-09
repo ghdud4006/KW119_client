@@ -200,7 +200,6 @@ public class TopicActivity extends AppCompatActivity {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.accumulate("topicNumber", mTopicNum);
 
-
                 HttpURLConnection con = null;
                 BufferedReader reader = null;
 
