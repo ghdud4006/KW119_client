@@ -70,7 +70,7 @@ import retrofit2.Retrofit;
  */
 public class SubmitActivity extends AppCompatActivity {
 
-    private static final String TAG="KW119-Submit";
+    private static final String TAG="CAMPUS119-Submit";
 
     private static final String SUBMIT_URL_ADDRESS="http://13.125.217.245:3000/submit";
     private static final String UPLOAD_IMG_URL_ADDRESS="http://13.125.217.245:3000";

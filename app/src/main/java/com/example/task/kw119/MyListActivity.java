@@ -48,7 +48,7 @@ import com.google.gson.JsonParser;
  */
 public class MyListActivity extends AppCompatActivity {
 
-    private static final String TAG="KW119-MyList";
+    private static final String TAG="CAMPUS119-MyList";
     private static final String MY_LIST_URL_ADDRESS="http://13.125.217.245:3000/mylist";
 
     private String mResponseMsg;

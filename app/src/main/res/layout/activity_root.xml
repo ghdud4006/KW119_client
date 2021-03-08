@@ -14,9 +14,9 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="173dp"
-        android:text="KW 119"
+        android:text="CAMPUS 119"
         android:textAllCaps="true"
-        android:textSize="80sp"
+        android:textSize="60sp"
         android:textStyle="bold|italic" />
 
 

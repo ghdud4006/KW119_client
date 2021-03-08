@@ -49,7 +49,7 @@ import retrofit2.Retrofit;
 
 public class TopicUpdateActivity extends AppCompatActivity {
 
-    private static final String TAG="KW119-TopicUpdate";
+    private static final String TAG="CAMPUS119-TopicUpdate";
 
     private static final String UPDATE_TOPIC_URL_ADDRESS="http://13.125.217.245:3000/update";
 

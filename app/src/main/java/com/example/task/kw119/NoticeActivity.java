@@ -43,7 +43,7 @@ import java.util.ArrayList;
  */
 public class NoticeActivity extends AppCompatActivity {
 
-    private static final String TAG="KW119-Notice";
+    private static final String TAG="CAMPUS119-Notice";
     private static final String NOTICE_URL_ADDRESS="http://13.125.217.245:3000/notice";
 
     private String mResponseMsg;

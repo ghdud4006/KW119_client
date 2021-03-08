@@ -37,7 +37,7 @@ import java.net.URL;
  */
 public class LoginActivity extends AppCompatActivity {
 
-    private static final String TAG="KW119-Login";
+    private static final String TAG="CAMPUS119-Login";
     private static final String LOGIN_URL_ADDRESS="http://13.125.217.245:3000/login";
 
     //widgets

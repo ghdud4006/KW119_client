@@ -21,7 +21,7 @@ import com.example.task.kw119.Modules.SaveSharedPreference;
  */
 public class RootActivity extends AppCompatActivity {
 
-    private static final String TAG="KW119-Root";
+    private static final String TAG="CAMPUS119-Root";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -34,7 +34,7 @@ import java.net.URL;
  */
 public class SignUpActivity extends AppCompatActivity {
 
-    private static final String TAG="KW119-Home-SignUp";
+    private static final String TAG="CAMPUS119-Home-SignUp";
     private static final String SIGN_UP_URL_ADDRESS="http://13.125.217.245:3000/signup";
 
     // data

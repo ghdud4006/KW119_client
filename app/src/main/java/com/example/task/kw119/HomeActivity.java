@@ -38,7 +38,7 @@ import java.net.URL;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private static final String TAG="KW119-Home";
+    private static final String TAG="CAMPUS119-Home";
 
     //widgets
     private Button mBtnNoticeAct, mBtnMyAct, mBtnSubmitAct, mBtnLogout, mBtnExit;

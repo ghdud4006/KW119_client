@@ -49,7 +49,7 @@ import java.net.URL;
  */
 public class TopicActivity extends AppCompatActivity {
 
-    private static final String TAG="KW119-Topic";
+    private static final String TAG="CAMPUS119-Topic";
 
     private static final String GET_TOPIC_URL_ADDRESS="http://13.125.217.245:3000/topic";
     private static final String GET_IMAGE_URL_ADDRESS="http://13.125.217.245:3000/static/";

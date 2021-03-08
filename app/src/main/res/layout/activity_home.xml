@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:text="KW 119"
+            android:text="CAMPUS 119"
             android:textAllCaps="true"
             android:textSize="40sp"
             android:textStyle="bold|italic" />
